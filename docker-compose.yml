@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  web:
+    container_name: name_gen
+    environment:
+      - NODE_ENV=prod
+    image: colmandevops/name_gen:latest
+    ports:
+      - "80:3000"
