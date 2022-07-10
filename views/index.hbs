@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <Title>Random Name</Title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <h1>Random Name Generator</h1>
+        <div class="result"></div>
+        
+        <div class="col-md-3">
+        <input type="checkbox" id="lastName" name="lastName" checked="1" value="1">
+        <label for="vehicle1"> Generate Last Name As Well</label><br>
+        </div>
+
+        <div class="col-md-3">
+        <button class="btn btn-primary" id="generate">Get Name</button>
+        <script src="./app.js"></script>
+        <script>
+            const resultDiv = document.querySelector('.result');
+            const generateBtn = document.querySelector('#generate');
+            generateBtn.addEventListener('click', () => {
+                if (document.getElementById('lastName').checked){
+                loadRandomName(resultDiv, 1);
+                }
+                else {
+                    loadRandomName(resultDiv, 0);
+                }
+            });
+        </script>
+        </div>
+    </body>
+</html>
