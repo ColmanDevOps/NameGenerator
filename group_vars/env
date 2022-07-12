@@ -1,0 +1,17 @@
+server_name: ansible-centos
+env: prod
+
+vpc_name: devops_project
+network: 10.10.0.0/16
+subnet_cidr: 10.10.0.0/24
+env_name: 
+aws_region: eu-central-1
+subnet: eu-central-1a
+
+keypair: ansible_key
+
+aws_centos_ami: ami-08b6d44b4f6f7b279
+Server_type: t2.micro
+server_volume_size:  20
+
+repo: https://github.com/ColmanDevOps/NameGenerator.git
