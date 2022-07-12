@@ -149,6 +149,7 @@
   vars_files:
     - group_vars/env
     - group_vars/colman.env
+    - group_vars/docker.env
   tasks:
     - name: install epel-release package
       yum: 
@@ -156,11 +157,10 @@
           - epel-release
         state: present
 
-    - name: install git, nginx, python-pip, yum-utils
+    - name: install git, python-pip, yum-utils
       yum: 
         name: 
           - git
-          - nginx
           - python-pip
           - yum-utils
         state: present
@@ -171,6 +171,7 @@
           - docker-ce
           - docker-ce-cli
           - containerd.io
+          - docker-compose
         state: present
         update_cache: true
 
@@ -179,16 +180,32 @@
         name: docker
         enabled: true
         state: restarted
-   
-    - name: Clone my website
+
+    - name: Copy ssh key
+      copy:
+        src: ~/.ssh/id_rsa
+        dest: ~/.ssh/id_rsa
+        mode: '0600'
+        
+    - name: Clone my app repo
       git:
-        repo: "{{ repo }}"
+        repo: git@github.com:ColmanDevOps/NameGenerator.git
         dest: /usr/app
         version: main
+        key_file: ~/.ssh/id_rsa
+        accept_hostkey: yes
         force: yes
 
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
-        enabled: yes
+    - name: Build docker image and push to DockerHub
+      shell: "{{ item }}"
+      args:
+        chdir: /usr/app
+      with_items:
+            docker login -u {{ docker_user }} -p {{ docker_token }}
+            docker build . --tag {{ docker_user }}/name_gen:latest
+            docker push {{ docker_user }}/name_gen:latest
+
+    - name: Start docker app
+      shell: docker-compose up -d
+      args:
+        chdir: /usr/app
