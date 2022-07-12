@@ -1,5 +1,5 @@
 const loadRandomName = (resultDiv, last) => {
-    fetch('http://127.0.0.1:8080/random-name')
+    fetch('/random-name')
     .then(response => response.json())
     .then(result => {
         if(last){
