@@ -1,0 +1,33 @@
+- name: destroy devops project
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+    - group_vars/env
+    - group_vars/colman.env
+  vars:
+      ansible_python_interpreter: /usr/bin/python3
+
+  tasks:    
+  - name: Delete EC2 instance
+    ec2:
+      region: "{{ aws_region }}"
+      state: absent
+      instance_tags:
+        Name: "{{ server_name }}"
+        Environment: "{{ env }}"
+      instance_ids: "{{server_id}}"
+
+  - name: Delete Route Table
+    ec2_vpc_route_table:
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc_id }}"
+      tags:
+          Name: "{{ vpc_name }}_public_rt"
+      state: absent
+
+  - name: Delete internet gateway in Environment {{ ec2_environment }}
+    ec2_vpc_igw:
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc_id }}"
+      state: absent
