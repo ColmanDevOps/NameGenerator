@@ -148,6 +148,7 @@
   gather_facts: True
   vars_files:
     - group_vars/env
+    - group_vars/colman.env
   tasks:
     - name: install epel-release package
       yum: 
@@ -155,24 +156,36 @@
           - epel-release
         state: present
 
-    - name: install git, nginx packages
+    - name: install git, nginx, python-pip, yum-utils
       yum: 
         name: 
           - git
           - nginx
+          - python-pip
+          - yum-utils
         state: present
 
+    - name: Install Docker
+      ansible.builtin.yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: true
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: restarted
+   
     - name: Clone my website
       git:
         repo: "{{ repo }}"
-        dest: /opt/my_site
+        dest: /usr/app
         version: main
         force: yes
-
-    - name: Copy nginx.conf file to the server
-      copy:
-        src: "files/nginx.conf"
-        dest: /etc/nginx/nginx.conf
 
     - name: restart nginx
       service:
