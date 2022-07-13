@@ -26,8 +26,30 @@
           Name: "{{ vpc_name }}_public_rt"
       state: absent
 
-  - name: Delete internet gateway in Environment {{ ec2_environment }}
+  - name: Delete internet gateway
     ec2_vpc_igw:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
+      tags:
+        Name: "{{ vpc_name }}_public_rt"
+      state: absent
+
+  - name: Delete security group
+    ec2_group:
+      region: "{{ aws_region }}"
+      group_id: "{{ sg_id }}"
+      state: absent
+
+  - name: Delete Subnet
+    ec2_vpc_subnet:
+      region: "{{ aws_region }}"
+      vpc_id: "{{ vpc_id }}"
+      cidr: "{{ subnet_cidr }}"
+      state: absent
+  
+  - name: Delete AWS VPC
+    ec2_vpc_net:
+      name: "{{ vpc_name }}"
+      cidr_block: "{{ network }}"
+      region: "{{ aws_region }}"
       state: absent

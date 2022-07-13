@@ -41,7 +41,6 @@
         Name: "{{ vpc_name }}"
       wait: yes
     register: subnet
-  - debug: var=subnet
 
   - name: Add subnet definition to vars file
     lineinfile:
@@ -96,7 +95,15 @@
           cidr_ip: 0.0.0.0/0
     register: sg
 
-  - name: Create server
+  - name: Add sg definition to vars file
+    lineinfile:
+      path: group_vars/colman.env
+      regexp: 'sg_id: '
+      line: 'sg_id: {{ sg.group_id }}'
+      state: present
+      create: True
+
+  - name: Create EC2 instance
     ec2:
       image: "{{ aws_centos_ami }}"
       wait: yes
@@ -121,8 +128,6 @@
       assign_public_ip: yes
     register: server_ec2
   
-  - debug: var=server_ec2.tagged_instances[0].public_ip
-
   - name: Add server public IP to application host group
     add_host: hostname={{ server_ec2.tagged_instances[0].public_ip }} groups=app
 
