@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const data = require('./MOCK_DATA.json');
+const data = require('./NamesDB.json');
 
 
 // Constants

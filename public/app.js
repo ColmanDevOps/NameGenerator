@@ -1,8 +1,8 @@
-const loadRandomName = (resultDiv, last) => {
+const loadRandomName = (resultDiv, includeLastName) => {
     fetch('/random-name')
     .then(response => response.json())
     .then(result => {
-        if(last){
+        if(includeLastName){
         resultDiv.classList.add('alert','alert-success');
         resultDiv.innerHTML = `<h2>${result.first_name} ${result.last_name}</h2>`;
     }
