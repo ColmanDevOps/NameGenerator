@@ -22,7 +22,6 @@
     ec2_vpc_route_table:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
-      route_table_id: "{{ route_table_id }}"
       tags:
           Name: "{{ vpc_name }}_public_rt"
       state: absent
