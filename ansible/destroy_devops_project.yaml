@@ -26,18 +26,18 @@
           Name: "{{ vpc_name }}_public_rt"
       state: absent
 
+  - name: Delete security group
+    ec2_group:
+      region: "{{ aws_region }}"
+      group_id: "{{ sg_id }}"
+      state: absent
+
   - name: Delete internet gateway
     ec2_vpc_igw:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
       tags:
         Name: "{{ vpc_name }}_public_rt"
-      state: absent
-
-  - name: Delete security group
-    ec2_group:
-      region: "{{ aws_region }}"
-      group_id: "{{ sg_id }}"
       state: absent
 
   - name: Delete Subnet
