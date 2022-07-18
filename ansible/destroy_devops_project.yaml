@@ -22,29 +22,34 @@
     ec2_vpc_route_table:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
+      route_table_id: "{{ route_table_id }}"
       tags:
           Name: "{{ vpc_name }}_public_rt"
       state: absent
 
-  - name: Delete security group
-    ec2_group:
-      region: "{{ aws_region }}"
-      group_id: "{{ sg_id }}"
-      state: absent
+  - name: unmap those public address before detaching the gateway
+    wait_for:
+      timeout: 40
 
   - name: Delete internet gateway
     ec2_vpc_igw:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
+      state: absent
       tags:
         Name: "{{ vpc_name }}_public_rt"
-      state: absent
 
   - name: Delete Subnet
     ec2_vpc_subnet:
       region: "{{ aws_region }}"
       vpc_id: "{{ vpc_id }}"
       cidr: "{{ subnet_cidr }}"
+      state: absent
+
+  - name: Delete security group
+    ec2_group:
+      region: "{{ aws_region }}"
+      group_id: "{{ sg_id }}"
       state: absent
   
   - name: Delete AWS VPC
